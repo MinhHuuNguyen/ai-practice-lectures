@@ -1,0 +1,478 @@
+{
+  "name": "news_summarizer",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://vnexpress.net/rss/kinh-doanh.rss",
+        "options": {}
+      },
+      "id": "5592591e-f7de-4307-904a-32278110a003",
+      "name": "vnexpress-kinh-doanh",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        -32,
+        256
+      ],
+      "typeVersion": 1.1,
+      "alwaysOutputData": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "notesInFlow": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://cafebiz.vn/rss/vi-mo.rss",
+        "options": {}
+      },
+      "id": "7e29a948-8dc9-4698-9383-77dda8937fb9",
+      "name": "cafebiz-vi-mo",
+
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        -32,
+        496
+      ],
+      "typeVersion": 1.1,
+      "alwaysOutputData": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://cafebiz.vn/rss/cau-chuyen-kinh-doanh.rss",
+        "options": {}
+      },
+      "id": "1daa3474-3a75-492f-a870-10a6427b7c3d",
+      "name": "cafebiz-cau-chuyen-kinh-doanh",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        -32,
+        720
+      ],
+      "typeVersion": 1.1,
+      "alwaysOutputData": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://cafebiz.vn/rss/bizmoney.rss",
+        "options": {}
+      },
+      "id": "c5386f35-756c-407f-bba1-7e09f44d2956",
+      "name": "cafebiz-bizmoney",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        -32,
+        960
+      ],
+      "typeVersion": 1.1,
+      "alwaysOutputData": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "30d4f694-9378-42b4-b1d5-cbc38fb3e7fe",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              },
+              "leftValue": "={{ $json.pubDate }}",
+              "rightValue": "={{ $today.minus({ days: 1 }) }}"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a867b870-5b6f-4c27-a4f0-ed9da16886e9",
+      "name": "filter_today",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        640,
+        720
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "maxItems": 3,
+        "keep": "lastItems"
+      },
+      "id": "74c33443-c6ee-41ce-a424-63d6227a59d9",
+      "name": "limit_news",
+      "type": "n8n-nodes-base.limit",
+      "position": [
+        864,
+        720
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "id": "10dcf47e-12e4-4a9e-a0a5-449e0d8864b6",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        192,
+        688
+      ],
+      "typeVersion": 3.1
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-zalo-tools.zaloMessageTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        608
+      ],
+      "id": "c6cac89f-11a7-4477-8f22-9bed0848b765",
+      "name": "Zalo Message Trigger",
+      "webhookId": "200f67bb-5148-4ec1-ad92-e4d98994301c",
+      "credentials": {
+        "zaloApi": {
+          "id": "4AS0QKpeAHY9UmCD",
+          "name": "Zalo API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('Zalo Message Trigger').item.json.message.threadId }}",
+        "message": "=Tin tức hôm nay",
+        "quote": {},
+        "mentions": {}
+      },
+      "type": "n8n-nodes-zalo-tools.zaloSendMessage",
+      "typeVersion": 4,
+      "position": [
+        1536,
+        720
+      ],
+      "id": "e7639983-f8aa-4217-a1f8-3fdda7ee6905",
+      "name": "Zalo Send Message",
+      "credentials": {
+        "zaloApi": {
+          "id": "4AS0QKpeAHY9UmCD",
+          "name": "Zalo API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a77ece77-bbf3-4b31-a891-11c4aa7179df",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "103f6980-084a-4e66-b58a-ea508bae9ddf",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "bbe67320-5478-4b9e-b104-5ac29ca6a48a",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "efe3f7bb-687d-4b26-8e64-9b39b376c7bf",
+              "name": "contentSnippet",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8a54d036-6510-4a9c-a7c8-7375715cce93",
+      "name": "map_field",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        416,
+        720
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "concatenate",
+              "field": "final_content",
+              "separateBy": "\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        1312,
+        720
+      ],
+      "id": "79408474-9a98-4573-9b5a-9bd619c3a018",
+      "name": "Summarize"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cebbd85e-ca5c-46c2-ae21-96ad8398b51c",
+              "name": "final_content",
+              "value": "=TITLE: {{ $json.title }}\nCONTENT: {{ $json.contentSnippet }}\nLINK: {{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        720
+      ],
+      "id": "ff01dd44-3598-4d00-aef4-92099103a1b5",
+      "name": "concat_fields"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Lỗi khi lấy data từ RSS"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        192,
+        496
+      ],
+      "id": "62ec31c9-7d5a-4586-9bc6-c554a236eb1d",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        720
+      ],
+      "id": "ed857e05-1dbc-4fb7-8cd6-46c28ff9413a",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "vnexpress-kinh-doanh": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cafebiz-vi-mo": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cafebiz-cau-chuyen-kinh-doanh": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cafebiz-bizmoney": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_today": {
+      "main": [
+        [
+          {
+            "node": "limit_news",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "limit_news": {
+      "main": [
+        [
+          {
+            "node": "concat_fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "map_field",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zalo Message Trigger": {
+      "main": [
+        [
+          {
+            "node": "vnexpress-kinh-doanh",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "cafebiz-vi-mo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "cafebiz-cau-chuyen-kinh-doanh",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "cafebiz-bizmoney",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zalo Send Message": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_field": {
+      "main": [
+        [
+          {
+            "node": "filter_today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize": {
+      "main": [
+        [
+          {
+            "node": "Zalo Send Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "concat_fields": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d156c3a9-a742-439b-a4e4-9f4c7e76f68f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10768c26fcd6821ec7ccac19dbb327d64ae07e9e53579db4c27b55b246eccfc7"
+  },
+  "id": "PFnoM4saw0jnpDEE",
+  "tags": []
+}
