@@ -1,0 +1,519 @@
+{
+  "name": "submit_form_check_approve",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "THU THẬP THÔNG TIN KHO",
+        "formDescription": "Thu thập thông tin tồn kho\nThu thập thông tin dung lượng kho còn lại",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Thông tin tồn kho?",
+              "fieldType": "number",
+              "placeholder": "0",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Thông tin dung lượng kho còn lại?",
+              "fieldType": "number",
+              "placeholder": "100",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        96
+      ],
+      "id": "0569cbf9-eb60-4471-9e13-9ba017e2080a",
+      "name": "thong-tin-ton-kho-dung-luong-kho",
+      "webhookId": "0ede5e7e-d16f-46fb-9174-67aaf82039cc"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0aa5d0ec-dfc8-4772-8ebc-b082c27b35dc",
+              "leftValue": "={{ $json['Thông tin tồn kho?'] }}",
+              "rightValue": 20,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "a2ca28ef-f3f7-4a37-8cf0-8f26d61168c7",
+      "name": "ton-kho-lon-hon-20"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Nhân viên nhắn lại với nội dung như thế này?\n\"{{ $json.data.text }}\"\n\nNhân viên có cần hỗ trợ không?\nNếu nhân viên cần hỗ trợ, trả lời tôi \"Có\". Nếu nhân viên không cần hỗ trợ, trả lời tôi \"Không\"."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        288
+      ],
+      "id": "142fb62d-dd59-47ac-ad95-cb4649fe4c00",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4dtIU2BrmehBS1eT",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "minhhuunguyen1511@gmail.com",
+        "subject": "KẾT QUẢ KIỂM TRA TỒN KHO - Trạng thái: Bình thường",
+        "message": "=Hiện tại trong kho đang tồn số lượng:  {{ $json['Thông tin tồn kho?'] }} sản phầm.\nTrạng thái tồn kho: Bình thường",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        96
+      ],
+      "id": "ddf2f233-daa5-4920-bab6-242b4a96f369",
+      "name": "send_mail_ok",
+      "webhookId": "6babcd3f-4c0e-483d-bc59-0a4c8d4cad62",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "l59fn3NMFsrRGEVR",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8409948018",
+        "text": "HÀNG ĐANG TỒN KHO. HÃY KIỂM TRA",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "1530781d-b1f6-47a9-91a7-8de959fb9382",
+      "name": "send_alert_not_ok",
+      "webhookId": "a57fce7d-7358-488d-9559-815fe3e11b67",
+      "credentials": {
+        "telegramApi": {
+          "id": "KYHIu4ZcoMBjMk46",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "8409948018",
+        "message": "=Dung lượng kho còn lại là:  {{ $json['Thông tin dung lượng kho còn lại?'] }}.\n\nCó cần đăng ký tăng thêm dung lượng kho hay không?",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        288
+      ],
+      "id": "1cc8c6d1-2693-4c06-acc5-c0b7411f6319",
+      "name": "get_approve",
+      "webhookId": "e0e0d82f-43f7-4add-9036-816b4475d845",
+      "credentials": {
+        "telegramApi": {
+          "id": "KYHIu4ZcoMBjMk46",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.approved }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    },
+                    "id": "e1b05d72-c94b-4f2d-97e3-5fbd5c76a998"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Approve"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fbedd19c-bbb0-4bbf-bf05-a30e26dcd407",
+                    "leftValue": "={{ $json.data.approved }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Disapprove"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        448,
+        288
+      ],
+      "id": "d642d7d0-5096-4519-a4a4-d048fef9b635",
+      "name": "check_approve"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "minhhuunguyen1511@gmail.com",
+        "subject": "NÂNG DUNG LƯỢNG KHO",
+        "message": "Dung lượng kho đã được duyệt để tăng thêm.\nHãy thực hiện hành động tăng dung lượng kho.",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        288
+      ],
+      "id": "b455d7d7-d04c-4616-ba99-619ab5e4f2fc",
+      "name": "send_mail_assign_task_wait_response",
+      "webhookId": "c30d8203-0d8a-4248-bc38-8ffaec77ed20",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "l59fn3NMFsrRGEVR",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.content.parts[0].text }}",
+                    "rightValue": "không",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "1d51d701-d592-42c5-8538-c636cce32707"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0b561c27-9538-4b14-b65a-0e627a66ac6c",
+                    "leftValue": "={{ $json.content.parts[0].text }}",
+                    "rightValue": "Không",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1b9e490f-79cf-434f-ae3e-b565703cdef2",
+                    "leftValue": "={{ $json.content.parts[0].text }}",
+                    "rightValue": "không",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a473f4ae-6b3d-45ec-9196-e6cc52792f98",
+                    "leftValue": "={{ $json.content.parts[0].text }}",
+                    "rightValue": "Không",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1248,
+        256
+      ],
+      "id": "e1187fca-43d8-4f76-8786-2aea47b3b63d",
+      "name": "check_response_need_help"
+    },
+    {
+      "parameters": {
+        "operation": "sendSticker",
+        "chatId": "8409948018",
+        "file": "CAACAgQAAxkBAAMoaJgm1NATgI6bQb7XL3zOWgPMRnYAAuMGAAJLae4QvTRz65huyDw2BA",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1472,
+        288
+      ],
+      "id": "0b3d2f9a-e6a5-40cc-bad1-08f9d2ee7702",
+      "name": "alert_if_need_help",
+      "webhookId": "bd90f231-b848-4e36-939b-38683f235e81",
+      "credentials": {
+        "telegramApi": {
+          "id": "KYHIu4ZcoMBjMk46",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "thong-tin-ton-kho-dung-luong-kho": {
+      "main": [
+        [
+          {
+            "node": "ton-kho-lon-hon-20",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "get_approve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ton-kho-lon-hon-20": {
+      "main": [
+        [
+          {
+            "node": "send_alert_not_ok",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "send_mail_ok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "check_response_need_help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_approve": {
+      "main": [
+        [
+          {
+            "node": "check_approve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_approve": {
+      "main": [
+        [
+          {
+            "node": "send_mail_assign_task_wait_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_mail_assign_task_wait_response": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_response_need_help": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "alert_if_need_help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "alert_if_need_help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6940f274-7cee-432b-b2ac-3d09f7ea0b87",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10768c26fcd6821ec7ccac19dbb327d64ae07e9e53579db4c27b55b246eccfc7"
+  },
+  "id": "HvmAAQFtO2sLS9mw",
+  "tags": [
+    {
+      "createdAt": "2025-08-08T09:17:11.994Z",
+      "updatedAt": "2025-08-08T09:17:11.994Z",
+      "id": "QkDxdqYFQvvFVMPg",
+      "name": "gemini"
+    },
+    {
+      "createdAt": "2025-08-12T04:25:35.742Z",
+      "updatedAt": "2025-08-12T04:25:35.742Z",
+      "id": "AUjWX8INblT0McIX",
+      "name": "done"
+    }
+  ]
+}
