@@ -14,3 +14,13 @@ RUN mkdir -p ${N8N_USER_FOLDER}/.n8n/nodes \
 USER node
 RUN npm install --omit=dev --prefix ${N8N_USER_FOLDER}/.n8n/nodes \
         n8n-nodes-zalo-tools@0.5.11
+
+
+# docker.io/n8nio/n8n:latest
+# docker.io/minhhuunguyen/my-custom-n8n:latest
+
+# Activation key: c3c290c5-0529-429b-a5db-7bc89b70e4a4
+
+# https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/5_workflows/news_summarizer.json
+# https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/5_workflows/chatbot_zalo_telegram_gemini.json
+# https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/5_workflows/submit_form_check_approve.json

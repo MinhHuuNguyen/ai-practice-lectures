@@ -1,0 +1,15 @@
+# Simulated daily request to your render project so that the service doesn't go down
+name: Daily Render N8N ping
+
+on:
+  schedule:
+    - cron: '*/3 * * * *'  # Runs every 3 minutes
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  curl-website:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run cURL on Website
+        run: curl -I https://my-custom-n8n-latest.onrender.com
