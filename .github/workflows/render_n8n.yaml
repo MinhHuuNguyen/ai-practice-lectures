@@ -4,7 +4,7 @@ name: Daily Render N8N ping
 on:
   schedule:
     - cron: '*/3 * * * *'  # Runs every 3 minutes
-  workflow_dispatch:  # Allows manual triggering
+  # workflow_dispatch:  # Allows manual triggering
 
 jobs:
   curl-website:
