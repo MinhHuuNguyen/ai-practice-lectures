@@ -1,10 +1,12 @@
-# Simulated daily request to your render project so that the service doesn't go down
 name: Daily Render N8N ping
 
 on:
   schedule:
-    - cron: '*/3 * * * *'  # Runs every 3 minutes
-  # workflow_dispatch:  # Allows manual triggering
+    - cron: "*/14 * * * *"  # Every 14 minutes
+  workflow_dispatch:  # Allows manual triggering
+
+env:
+  N8N_URL: https://my-custom-n8n-latest.onrender.com
 
 jobs:
   curl-website:
@@ -12,4 +14,32 @@ jobs:
 
     steps:
       - name: Run cURL on Website
-        run: curl -I https://my-custom-n8n-latest.onrender.com
+        run: |
+          echo "Checking health of N8N service at $N8N_URL ..."
+          
+          response=$(curl -s -o response.txt -w "%{http_code}" "$N8N_URL")
+          
+          echo "HTTP Status: $response"
+          echo "------ Response Body ------"
+          cat response.txt
+          echo "---------------------------"
+          
+          # Write summary in markdown
+          {
+            echo "## N8N Health Check Result"
+            echo "- **URL:** $N8N_URL"
+            echo "- **HTTP Status:** $response"
+            echo ""
+            echo "### Response Body"
+            echo '```'
+            cat response.txt
+            echo '```'
+          } >> $GITHUB_STEP_SUMMARY
+          
+          # Fail job if status code is not 200–399
+          if [ $response -ge 400 ]; then
+            echo "❌ Health check failed!"
+            exit 1
+          else
+            echo "✅ Health check passed!"
+          fi
