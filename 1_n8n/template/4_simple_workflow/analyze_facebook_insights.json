@@ -1,0 +1,640 @@
+{
+  "name": "analyze_facebook_insights",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -272
+      ],
+      "id": "5ea58773-1ba5-4ed2-8235-a190c28a7063",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v23.0",
+        "node": "1781203398828440",
+        "edge": "insights",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "metric",
+                "value": "page_views_total"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -272
+      ],
+      "id": "faec12c9-afdb-4068-b9f3-1bf7ed19a8f3",
+      "name": "Facebook Graph API",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "sJSzvjSByd8dY09B",
+          "name": "Facebook Graph KTCB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc",
+          "mode": "list",
+          "cachedResultName": "fb_insights_data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "page_views_raw",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $json.end_time }}",
+            "page_views": "={{ $json.value }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "page_views",
+              "displayName": "page_views",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        -368
+      ],
+      "id": "d26861e7-f713-42e6-86ef-82e30632de42",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "h7ltdhUd8SXWjHVU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "569fab18-c3e2-40b7-b24b-a0182b58bfe7",
+              "leftValue": "={{ $json.previous }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -176
+      ],
+      "id": "e1fff0fa-b05e-4e42-a2bf-223fb7c78e5b",
+      "name": "if_previous_exists"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.previous }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        896,
+        -248
+      ],
+      "id": "b6a6be16-8daf-49ef-9a77-4c8f7b4fa444",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1344,
+        -80
+      ],
+      "id": "a0238582-1629-49e2-9d5d-d9a824e639d8",
+      "name": "Wait",
+      "webhookId": "db87380c-f8da-4805-bbef-87de10f2730f"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc",
+          "mode": "list",
+          "cachedResultName": "fb_insights_data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "page_views_raw",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $json.end_time }}",
+            "page_views": "={{ $json.value }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "page_views",
+              "displayName": "page_views",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1344,
+        -344
+      ],
+      "id": "d248e910-1933-44ec-8313-2b1740da4f81",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "h7ltdhUd8SXWjHVU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "out = []\n\nfor item in items:\n    payload = item.get(\"json\", item)  # be tolerant to shapes\n    for metric in payload.get(\"data\", []):\n        if metric.get(\"name\") == \"page_views_total\":\n            period = metric.get(\"period\")\n            if period != \"day\": continue\n            for v in metric.get(\"values\", []):\n                out.append({\n                    \"json\": {\n                        # \"period\": period,\n                        \"end_time\": v.get(\"end_time\"),\n                        \"value\": v.get(\"value\"),\n                    }\n                })\n\nreturn out"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -368
+      ],
+      "id": "107da6b9-ff49-4c24-becd-becee24fc791",
+      "name": "get_page_views_total"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "out = []\n\nfor item in items:\n    payload = item.get(\"json\", item)  # be tolerant to shapes\n    for metric in payload.get(\"data\", []):\n        if metric.get(\"name\") == \"page_views_total\":\n            period = metric.get(\"period\")\n            if period != \"day\": continue\n            for v in metric.get(\"values\", []):\n                out.append({\n                    \"json\": {\n                        \"period\": period,\n                        \"end_time\": v.get(\"end_time\"),\n                        \"value\": v.get(\"value\"),\n                    }\n                })\n\nreturn out"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -344
+      ],
+      "id": "845d0f32-76bf-4f8e-a394-3d6ad1b4bf78",
+      "name": "get_page_views_total_loop"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "for item in items:\n  payload = item.get(\"json\", item)  # be tolerant to shapes\n  return payload.get(\"paging\", {})"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -176
+      ],
+      "id": "c45a9014-bd74-4068-b9c1-7e0f227205be",
+      "name": "get_paging"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "for item in items:\n  payload = item.get(\"json\", item)  # be tolerant to shapes\n  return payload.get(\"paging\", {})"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -152
+      ],
+      "id": "9694dd69-9bed-4a19-8bf5-a31861e23f6b",
+      "name": "get_paging_loop"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc",
+          "mode": "list",
+          "cachedResultName": "fb_insights_data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "page_views_raw",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rse0MAmC7lBVGeFIK8Rh6HOcPd-h1ltn-Xk4gAjUsBc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        0,
+        144
+      ],
+      "id": "89b24c52-3ecd-4d43-a61e-eb46e936b1d7",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "h7ltdhUd8SXWjHVU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# n8n Python Code node\n\nseen = set()\nkept = []\n\n# walk from the end so the last per date is kept\nfor item in reversed(items):\n    obj = item.get(\"json\", {})\n    day = str(obj.get(\"date\", \"\"))[:10]  # YYYY-MM-DD\n    if day and day not in seen:\n        seen.add(day)\n        obj.pop('row_number')\n        obj['date'] = day\n        kept.append(obj)\n\n# restore original order of the kept \"last\" items\nout = list(reversed(kept))\nout.sort(key=lambda i: i.get(\"date\", \"\"))\n\nout_str = \"\"\nfor o in out:\n  out_str += f\"{o['date']}:{o['page_views']};\"\nreturn {\"page_views\": out_str}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        144
+      ],
+      "id": "d1388092-b193-44c7-913d-366f9b7def67",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash-thinking-exp",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash-thinking-exp"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=I have data of facebook page views like this: Daily data is separated by \";\", before \":\" is the date, after \":\" is the number of page views\n{{ $json.page_views }}\n\nAnalyze this for me"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "Format for Google Docs, not Markdown. Answer in Vietnamese."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        448,
+        144
+      ],
+      "id": "928fd931-0e59-41b2-b156-0f82ee95a0b9",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "bkQFAFw3UUfuyFkd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8409948018",
+        "text": "=Check out the analysis link here.\n\nhttps://docs.google.com/document/d/{{ $json.documentId }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1248,
+        144
+      ],
+      "id": "82f84130-f0bd-484e-949c-cf267ed5da6a",
+      "name": "Send a text message",
+      "webhookId": "5311a1d7-735a-4fbb-9c76-e2dfa5cd471d",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "default",
+        "title": "=Page views analysis by Gemini {{$today.setZone('Asia/Bangkok').toFormat('yyyy/LL/dd')}}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        800,
+        144
+      ],
+      "id": "404c5455-15b2-42c8-a5f9-f506481a1ec8",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "0SoW51upgQw17ZjE",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Message a model').item.json.content.parts[0].text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        144
+      ],
+      "id": "ce1cdb0a-7f75-44e1-8303-c9b62f9da627",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "0SoW51upgQw17ZjE",
+          "name": "Google Docs account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Facebook Graph API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Graph API": {
+      "main": [
+        [
+          {
+            "node": "get_page_views_total",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "get_paging",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "if_previous_exists": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "get_page_views_total_loop",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "get_paging_loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "if_previous_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        []
+      ]
+    },
+    "get_page_views_total": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_page_views_total_loop": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_paging": {
+      "main": [
+        [
+          {
+            "node": "if_previous_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_paging_loop": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "258ee642-883e-4439-9f71-ab577723206f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10768c26fcd6821ec7ccac19dbb327d64ae07e9e53579db4c27b55b246eccfc7"
+  },
+  "id": "24kbKtdkqdHSJ0GG",
+  "tags": []
+}

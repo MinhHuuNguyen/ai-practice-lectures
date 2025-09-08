@@ -1,0 +1,1124 @@
+{
+  "name": "social_media_post",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        352
+      ],
+      "id": "8b782c61-1390-4148-aca1-045ea80b0384",
+      "name": "Telegram Trigger",
+      "webhookId": "71bd81cd-7a5b-4ebe-8394-92abdb04131c",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Viết cho tôi một đoạn trạng thái dài khoảng 120 chữ về chủ đề sau:\n{{ $json.message.text }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "trả lời bằng tiếng Việt"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        672,
+        280
+      ],
+      "id": "e2230e62-0059-4ebe-9c1f-c7639f48b171",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "bkQFAFw3UUfuyFkd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e4ef8ff3-71e8-48f3-851d-863d6154a40a",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        352
+      ],
+      "id": "4db8a177-b82e-4cad-874c-b526fd674d76",
+      "name": "if_text"
+    },
+    {
+      "parameters": {
+        "operation": "sendSticker",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "file": "CAACAgIAAxkBAAM6aJruF2PJHUndTFE_dos1P7j6zBYAAm4AA0G1VgzQpYRy5txaiDYE",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        424
+      ],
+      "id": "3f2f9884-06c1-4211-a22d-a3aacc14f7a2",
+      "name": "response_sticker",
+      "webhookId": "1b5be3f0-a3d8-4b5f-976b-bf190297ef71",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash-exp-image-generation",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash-exp-image-generation"
+        },
+        "prompt": "=Sinh cho tôi 1 hình ảnh với mô tả như sau:\n{{ $json.message.text }}",
+        "options": {
+          "binaryPropertyOutput": "image"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -8
+      ],
+      "id": "b27ab259-1ecb-4ea7-8951-8f094ffa3a0b",
+      "name": "Generate an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "bkQFAFw3UUfuyFkd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "Which social media?",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Social media",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Facebook"
+                  },
+                  {
+                    "option": "LinkedIn"
+                  },
+                  {
+                    "option": "Instagram"
+                  },
+                  {
+                    "option": "X"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2816,
+        -128
+      ],
+      "id": "5fd17986-5f1b-4954-826c-01187266fdb0",
+      "name": "choose_social_media",
+      "webhookId": "0ddc065a-459f-4d5b-a4d7-8c0513e0bb20",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f3af7656-1790-4c27-b2a7-cf7fa563a485",
+              "leftValue": "={{ $json.data['Social media'] }}",
+              "rightValue": "Facebook",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3040,
+        16
+      ],
+      "id": "4f5fe16d-35f6-4c17-a763-d394f4faf27e",
+      "name": "if_facebook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fa237507-d470-4cd3-a8c2-e18812dc8210",
+              "leftValue": "={{ $json.data['Social media'] }}",
+              "rightValue": "LinkedIn",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3040,
+        -368
+      ],
+      "id": "4ef264ae-81c4-49e8-93c4-bd7eb4d33a05",
+      "name": "if_linkedin"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ddb5e052-ab63-4f42-8cda-ac0bed06f283",
+              "leftValue": "={{ $json.data['Social media'] }}",
+              "rightValue": "X",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3040,
+        208
+      ],
+      "id": "15d8b7d8-b633-4cb0-aa64-298be57cee69",
+      "name": "if_x"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5623a6a2-f7e3-492b-a04d-fd1de453c897",
+              "leftValue": "={{ $json.data['Social media'] }}",
+              "rightValue": "Instagram",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3040,
+        -176
+      ],
+      "id": "709af6a3-d097-4880-8ab3-771fec36ef37",
+      "name": "if_instagram"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Bạn hãy thử lại với yêu cầu chi tiết hơn và thử lại sau",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2816,
+        64
+      ],
+      "id": "749f541f-4350-4bb8-8602-7ea3e29bdf7a",
+      "name": "try_again_later",
+      "webhookId": "84990877-6133-4887-a116-a3165f49d2a7",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "Do you approve this post?",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 10,
+              "resumeUnit": "minutes"
+            }
+          },
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2368,
+        -128
+      ],
+      "id": "d0b740ca-8388-421a-82e7-c62edfb19939",
+      "name": "get_approval",
+      "webhookId": "eaa5da92-b8aa-45b4-a917-58b899122a03",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5f52a616-87e9-4486-9607-f3e4cf310321",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2592,
+        -128
+      ],
+      "id": "d730c42b-c946-4d8d-8dc7-41ac08ec4242",
+      "name": "if_approve"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=https://www.facebook.com/photo/?fbid={{ $json.fb_photo_id }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2144,
+        -128
+      ],
+      "id": "c8000cad-ccb8-4746-871a-ca8ff1532836",
+      "name": "response_to_check",
+      "webhookId": "65ddea80-36cb-410a-ac1f-4d31002d5f0a",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=The post is published here:\nhttps://www.facebook.com/{{ $json.page_id }}/posts/{{ $json.post_id }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3712,
+        16
+      ],
+      "id": "2b389db2-db1d-4e0f-9349-1e4ff6c80415",
+      "name": "Send a text message",
+      "webhookId": "af130509-bf29-463f-b595-e31ae3196717",
+      "credentials": {
+        "telegramApi": {
+          "id": "FeTMP5vpN8xL2TAm",
+          "name": "Telegram DabySocialMediaPostBot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "results = []\nfor item in _input.all():\n    raw_id = item['json']['id']\n    page_id = raw_id.split('_')[0]\n    post_id = raw_id.split('_')[-1]\n    \n    results.append({\n        \"json\": {\n            \"page_id\": page_id,\n            \"post_id\": post_id,\n            \"post_supports_client_mutation_id\": item['json']['post_supports_client_mutation_id']\n        }\n    })\n\n# Return modified items\nreturn results"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3488,
+        16
+      ],
+      "id": "69f35de8-1fac-44ed-b9da-26d991b6f2e4",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "me",
+        "edge": "photos",
+        "sendBinaryData": true,
+        "binaryPropertyName": "file:image",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "published",
+                "value": "false"
+              },
+              {
+                "name": "caption",
+                "value": "={{ $json.content.parts[0].text }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        208
+      ],
+      "id": "765fb929-d3db-4fa7-8962-671bfb840899",
+      "name": "upload_draft_gemini",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "sJSzvjSByd8dY09B",
+          "name": "Facebook Graph KTCB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "me",
+        "edge": "photos",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "published",
+                "value": "false"
+              },
+              {
+                "name": "caption",
+                "value": "={{ $json.content.parts[0].text }}"
+              },
+              {
+                "name": "url",
+                "value": "={{ $json.data[0].url }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        -80
+      ],
+      "id": "4bd80acd-b5ff-4d7a-8f27-87d4547df801",
+      "name": "upload_draft_flux",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "sJSzvjSByd8dY09B",
+          "name": "Facebook Graph KTCB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8675a28d-292f-4327-b562-b76c701ad6a1",
+              "leftValue": "={{ $json.data[0].url }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        -104
+      ],
+      "id": "4a378640-f98c-45a7-be4e-b660940ae830",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "id",
+              "newKey": "fb_photo_id"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        -80
+      ],
+      "id": "86b91487-2e5a-472a-9e35-5e367cb4338b",
+      "name": "Rename Keys"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://router.huggingface.co/together/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <HUGGINGFACE_API_KEY>"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": \"{{ $json.message.text }}\",\n  \"model\": \"black-forest-labs/FLUX.1-schnell\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        -104
+      ],
+      "id": "21c56b53-76dd-4e59-a776-7f0e72c5f330",
+      "name": "api_flux"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1024,
+        -152
+      ],
+      "id": "1bdfc754-d775-431a-9748-714c4d39e6a5",
+      "name": "merge_flux"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1024,
+        136
+      ],
+      "id": "5835f3fe-9562-449f-8210-4edbc1e56375",
+      "name": "merge_gemini"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1472,
+        -80
+      ],
+      "id": "ab3f7626-b4fc-4bf6-b034-c87c6570a86c",
+      "name": "merge_fb"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1920,
+        -128
+      ],
+      "id": "975bc72b-df5f-4b45-b2bb-9373d452a23c",
+      "name": "merge",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1DzM8DQH8kgrDyZK7UxWl1Y2oeDcO5TGD",
+          "mode": "list",
+          "cachedResultName": "default_photo",
+          "cachedResultUrl": "https://drive.google.com/file/d/1DzM8DQH8kgrDyZK7UxWl1Y2oeDcO5TGD/view?usp=drivesdk"
+        },
+        "options": {
+          "binaryPropertyName": "image"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        736,
+        -104
+      ],
+      "id": "d199b296-f8a6-45f5-a268-34b4ea20a3e9",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "InaWtfm8Ajj9ooj6",
+          "name": "Google Drive minhhuunguyen.lecture account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "=me",
+        "edge": "feed",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "message",
+                "value": "={{ $('merge').item.json.content.parts[0].text }}"
+              },
+              {
+                "name": "attached_media[0]",
+                "value": "={\"media_fbid\":\"{{ $('merge').item.json.fb_photo_id }}\"}"
+              },
+              {
+                "name": "attached_media[1]",
+                "value": "={\"media_fbid\":\"{{ $('merge').item.json.fb_photo_id }}\"}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        3264,
+        16
+      ],
+      "id": "410d67b3-40e3-4d87-ae50-fb7969c49a3e",
+      "name": "publish_post",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "sJSzvjSByd8dY09B",
+          "name": "Facebook Graph KTCB account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "if_text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "merge_gemini",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "merge_flux",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "if_text": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "api_flux",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "response_sticker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "merge_gemini",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "choose_social_media": {
+      "main": [
+        [
+          {
+            "node": "if_facebook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if_linkedin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if_x",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if_instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_facebook": {
+      "main": [
+        [
+          {
+            "node": "publish_post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_linkedin": {
+      "main": [
+        []
+      ]
+    },
+    "if_x": {
+      "main": [
+        []
+      ]
+    },
+    "get_approval": {
+      "main": [
+        [
+          {
+            "node": "if_approve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_approve": {
+      "main": [
+        [
+          {
+            "node": "choose_social_media",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "try_again_later",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "response_to_check": {
+      "main": [
+        [
+          {
+            "node": "get_approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload_draft_gemini": {
+      "main": [
+        [
+          {
+            "node": "merge_fb",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "merge_flux",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload_draft_flux": {
+      "main": [
+        [
+          {
+            "node": "merge_fb",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "api_flux": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge_flux": {
+      "main": [
+        [
+          {
+            "node": "upload_draft_flux",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge_gemini": {
+      "main": [
+        [
+          {
+            "node": "upload_draft_gemini",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge_fb": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge": {
+      "main": [
+        [
+          {
+            "node": "response_to_check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "merge_gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_instagram": {
+      "main": [
+        []
+      ]
+    },
+    "publish_post": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c3c659dd-9195-4646-92b1-41b6360708e9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10768c26fcd6821ec7ccac19dbb327d64ae07e9e53579db4c27b55b246eccfc7"
+  },
+  "id": "0HG9kyFO92drRSjO",
+  "tags": [
+    {
+      "createdAt": "2025-08-26T14:24:05.757Z",
+      "updatedAt": "2025-08-26T14:24:05.757Z",
+      "id": "j5EjMRTWEmqiyVYD",
+      "name": "gemini"
+    },
+    {
+      "createdAt": "2025-08-26T14:29:20.887Z",
+      "updatedAt": "2025-08-26T14:29:20.887Z",
+      "id": "VbgETN1R2B1maQaT",
+      "name": "miss_zalo"
+    }
+  ]
+}

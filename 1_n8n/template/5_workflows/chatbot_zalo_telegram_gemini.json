@@ -11,16 +11,16 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -16,
-        -320
+        -448,
+        96
       ],
-      "id": "16236d08-0f01-4fc8-bbd2-724c3e8776e6",
+      "id": "19828691-0a54-4426-a9f4-fc6689b85738",
       "name": "Telegram Trigger",
       "webhookId": "051f791f-db78-49bd-b9b8-210b76d65b66",
       "credentials": {
         "telegramApi": {
-          "id": "KYHIu4ZcoMBjMk46",
-          "name": "Telegram account"
+          "id": "j65M4EpKhWkQzVoZ",
+          "name": "Telegram DabyWhoIsMinhHuuNguyenBot account"
         }
       }
     },
@@ -46,14 +46,14 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        432,
-        -416
+        0,
+        0
       ],
-      "id": "c51649cc-1668-44f8-aeb0-88e46c226224",
+      "id": "19d1c649-699b-4574-ab78-4f200998d069",
       "name": "Message a model",
       "credentials": {
         "googlePalmApi": {
-          "id": "4dtIU2BrmehBS1eT",
+          "id": "bkQFAFw3UUfuyFkd",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -86,10 +86,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        208,
-        -320
+        -224,
+        96
       ],
-      "id": "8d961b9b-170e-456a-b64d-2539a9c73e19",
+      "id": "64936cc3-4e62-4715-93fa-6023d2fe6e0b",
       "name": "if_text"
     },
     {
@@ -104,16 +104,16 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        784,
-        -416
+        352,
+        0
       ],
-      "id": "b68dea79-75b1-48bc-b730-d6cc1113a30e",
+      "id": "574e3721-cbf4-4273-ab13-3149b8876121",
       "name": "response_answer",
       "webhookId": "d303d75a-3e0a-45a8-b726-fb61da32809c",
       "credentials": {
         "telegramApi": {
-          "id": "KYHIu4ZcoMBjMk46",
-          "name": "Telegram account"
+          "id": "j65M4EpKhWkQzVoZ",
+          "name": "Telegram DabyWhoIsMinhHuuNguyenBot account"
         }
       }
     },
@@ -127,16 +127,16 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        496,
-        -224
+        64,
+        192
       ],
-      "id": "29736eaa-f130-4189-a84d-1dff6bc2e84c",
+      "id": "6ced14ab-410b-4b8c-856a-323ea080fd0d",
       "name": "response_sticker",
       "webhookId": "d303d75a-3e0a-45a8-b726-fb61da32809c",
       "credentials": {
         "telegramApi": {
-          "id": "KYHIu4ZcoMBjMk46",
-          "name": "Telegram account"
+          "id": "j65M4EpKhWkQzVoZ",
+          "name": "Telegram DabyWhoIsMinhHuuNguyenBot account"
         }
       }
     }
@@ -188,24 +188,24 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "6f4f44fa-92be-4e34-893c-49ee680dfd13",
+  "versionId": "0050bd89-bb1c-46c7-bc70-86e39ab94302",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "10768c26fcd6821ec7ccac19dbb327d64ae07e9e53579db4c27b55b246eccfc7"
   },
-  "id": "fJDr79WVgLTXvLXk",
+  "id": "5IRDqPAM1G6sLHA8",
   "tags": [
     {
-      "createdAt": "2025-08-08T09:17:11.994Z",
-      "updatedAt": "2025-08-08T09:17:11.994Z",
-      "id": "QkDxdqYFQvvFVMPg",
+      "createdAt": "2025-08-26T14:24:05.757Z",
+      "updatedAt": "2025-08-26T14:24:05.757Z",
+      "id": "j5EjMRTWEmqiyVYD",
       "name": "gemini"
     },
     {
-      "name": "miss_zalo",
-      "id": "PhD7PRth9wMsB5SA",
-      "createdAt": "2025-08-12T07:37:42.182Z",
-      "updatedAt": "2025-08-12T07:37:42.182Z"
+      "createdAt": "2025-08-26T14:29:20.887Z",
+      "updatedAt": "2025-08-26T14:29:20.887Z",
+      "id": "VbgETN1R2B1maQaT",
+      "name": "miss_zalo"
     }
   ]
 }

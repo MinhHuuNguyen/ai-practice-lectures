@@ -1,0 +1,105 @@
+{
+  "name": "upload_video_youtube",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f2d0447c-d3be-4843-98ba-108fbf5a9dba",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1L1WLAziuGuqjw8xSL-eCbLqnl5nvV-in",
+          "mode": "list",
+          "cachedResultName": "output.mp4",
+          "cachedResultUrl": "https://drive.google.com/file/d/1L1WLAziuGuqjw8xSL-eCbLqnl5nvV-in/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "2343501c-6df7-44c2-b4ad-2f4752cabaad",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "InaWtfm8Ajj9ooj6",
+          "name": "Google Drive minhhuunguyen.lecture account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "My Custom Title",
+        "regionCode": "VN",
+        "categoryId": "22",
+        "options": {
+          "privacyStatus": "private"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "f84ee9b9-a445-4e5b-a980-82593ee6a1ee",
+      "name": "Upload a video",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "tjvWPrbjTcSaeFb9",
+          "name": "YouTube account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Upload a video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9d65625c-f47e-4769-8482-e808c0bb18f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "10768c26fcd6821ec7ccac19dbb327d64ae07e9e53579db4c27b55b246eccfc7"
+  },
+  "id": "G4gDxeUF9VXRQ8ao",
+  "tags": []
+}

@@ -21,6 +21,8 @@ RUN npm install --omit=dev --prefix ${N8N_USER_FOLDER}/.n8n/nodes \
 
 # Activation key: c3c290c5-0529-429b-a5db-7bc89b70e4a4
 
+# https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/4_simple_workflow/submit_form_check_approve.json
+
 # https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/5_workflows/news_summarizer.json
 # https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/5_workflows/chatbot_zalo_telegram_gemini.json
-# https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/5_workflows/submit_form_check_approve.json
+# https://raw.githubusercontent.com/MinhHuuNguyen/ai-practice-lectures/refs/heads/master/1_n8n/template/5_workflows/social_media_post.json

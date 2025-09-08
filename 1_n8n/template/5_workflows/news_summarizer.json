@@ -6,12 +6,12 @@
         "url": "https://vnexpress.net/rss/kinh-doanh.rss",
         "options": {}
       },
-      "id": "8ec3c20d-6df5-4c25-80ee-ce5dbaf938f4",
+      "id": "707ce227-115f-487d-ade8-fe0336087151",
       "name": "vnexpress-kinh-doanh",
       "type": "n8n-nodes-base.rssFeedRead",
       "position": [
-        -48,
-        224
+        48,
+        64
       ],
       "typeVersion": 1.1,
       "alwaysOutputData": false,
@@ -25,12 +25,12 @@
         "url": "https://cafebiz.vn/rss/vi-mo.rss",
         "options": {}
       },
-      "id": "e72bd250-3b60-4fef-9023-bc248b298e03",
+      "id": "973d48bc-3cbb-4fb8-a2e1-267849693f99",
       "name": "cafebiz-vi-mo",
       "type": "n8n-nodes-base.rssFeedRead",
       "position": [
-        -48,
-        480
+        48,
+        320
       ],
       "typeVersion": 1.1,
       "alwaysOutputData": false,
@@ -43,12 +43,12 @@
         "url": "https://cafebiz.vn/rss/cau-chuyen-kinh-doanh.rss",
         "options": {}
       },
-      "id": "0dd80778-e612-439c-ae09-d0bf1ce7cf54",
+      "id": "a494529e-efba-42b3-b8c3-da5e965afcca",
       "name": "cafebiz-cau-chuyen-kinh-doanh",
       "type": "n8n-nodes-base.rssFeedRead",
       "position": [
-        -48,
-        672
+        48,
+        512
       ],
       "typeVersion": 1.1,
       "alwaysOutputData": false,
@@ -61,12 +61,12 @@
         "url": "https://cafebiz.vn/rss/bizmoney.rss",
         "options": {}
       },
-      "id": "7c129310-2c93-4607-bd1e-d2691a45124e",
+      "id": "7a41cd71-2557-4e5b-aad0-0377415f1cbc",
       "name": "cafebiz-bizmoney",
       "type": "n8n-nodes-base.rssFeedRead",
       "position": [
-        -48,
-        928
+        48,
+        768
       ],
       "typeVersion": 1.1,
       "alwaysOutputData": false,
@@ -98,12 +98,12 @@
         },
         "options": {}
       },
-      "id": "80ba99e6-9341-48d0-bcdf-a2836a1c8730",
+      "id": "dff05221-5c82-47b1-90e8-0110cecf47a5",
       "name": "filter_today",
       "type": "n8n-nodes-base.filter",
       "position": [
-        624,
-        688
+        720,
+        528
       ],
       "typeVersion": 2.2
     },
@@ -112,12 +112,12 @@
         "maxItems": 2,
         "keep": "lastItems"
       },
-      "id": "a7112ce4-4853-4a46-9b30-d2d3807e04de",
+      "id": "a5ccbfa8-ed86-4b5d-872c-1e0844975613",
       "name": "limit_news",
       "type": "n8n-nodes-base.limit",
       "position": [
-        848,
-        688
+        944,
+        528
       ],
       "typeVersion": 1
     },
@@ -125,12 +125,12 @@
       "parameters": {
         "numberInputs": 4
       },
-      "id": "457b91d2-b619-4dbf-b742-852bb768afb7",
+      "id": "8767308b-c3d7-4d34-9684-89ba8b42a3b1",
       "name": "Merge",
       "type": "n8n-nodes-base.merge",
       "position": [
-        176,
-        656
+        272,
+        496
       ],
       "typeVersion": 3.1
     },
@@ -154,12 +154,12 @@
         },
         "options": {}
       },
-      "id": "724d2db9-e47c-43ec-baf1-5cb44187fddf",
+      "id": "acf5b721-4ca1-4201-9d9e-26a6749959e9",
       "name": "map_field",
       "type": "n8n-nodes-base.set",
       "position": [
-        400,
-        688
+        496,
+        528
       ],
       "typeVersion": 3.4
     },
@@ -170,10 +170,10 @@
       "type": "n8n-nodes-base.stopAndError",
       "typeVersion": 1,
       "position": [
-        176,
-        464
+        272,
+        304
       ],
-      "id": "d4d48207-9517-4c82-9258-2448d4afab0e",
+      "id": "6170623b-b9c3-48a0-905f-f1c4683d9b02",
       "name": "Stop and Error"
     },
     {
@@ -181,10 +181,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -272,
-        880
+        -176,
+        720
       ],
-      "id": "ff3cc442-8f59-4241-b49b-a7b4a7e03677",
+      "id": "584ba30f-8ecc-4735-856a-c88cb9b94b9d",
       "name": "When clicking ‘Execute workflow’"
     },
     {
@@ -205,14 +205,14 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        1072,
-        688
+        1168,
+        528
       ],
-      "id": "9e288ee0-3682-4169-8497-f68938dfd533",
+      "id": "99f684dc-c1a9-478e-866b-6295fd506539",
       "name": "Analyze document",
       "credentials": {
         "googlePalmApi": {
-          "id": "4dtIU2BrmehBS1eT",
+          "id": "bkQFAFw3UUfuyFkd",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -230,38 +230,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -272,
-        272
+        -176,
+        112
       ],
-      "id": "daf4269c-9e7d-4fe1-a849-7465be938d05",
+      "id": "cdaa0802-619d-4b2b-9b9d-03ad405046ea",
       "name": "Schedule Trigger"
-    },
-    {
-      "parameters": {
-        "sendTo": "minhhuunguyen1511@gmail.com",
-        "subject": "TIN TỨC HÔM NAY",
-        "emailType": "text",
-        "message": "=\n{{ $json.text }}",
-        "options": {
-          "appendAttribution": false,
-          "senderName": "Hey Daby!!!"
-        }
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        1744,
-        688
-      ],
-      "id": "0e44640d-296b-4616-85c0-0952434d5f2e",
-      "name": "Send a message",
-      "webhookId": "9a670e70-1d14-4aa7-9d2d-1ba57dd2b773",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "l59fn3NMFsrRGEVR",
-          "name": "Gmail account"
-        }
-      }
     },
     {
       "parameters": {
@@ -270,7 +243,7 @@
             {
               "id": "8ca0a6da-69dc-49b0-a92d-c9ed4223c9cc",
               "name": "text",
-              "value": "=\n\nBÀI BÁO: {{ $('limit_news').item.json.link }}\nTÓM TẮT {{ $json.content.parts[0].text }}",
+              "value": "=\n\nBÀI BÁO:\n\n{{ $('limit_news').item.json.link }}\n\n{{ $json.content.parts[0].text }}",
               "type": "string"
             }
           ]
@@ -280,10 +253,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1296,
-        688
+        1392,
+        528
       ],
-      "id": "c0d2f804-bc09-48e1-bffe-903a51e6b970",
+      "id": "a3c61ad2-fbd0-410a-800e-530d06579bb6",
       "name": "map_text_link"
     },
     {
@@ -300,11 +273,33 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        1520,
-        688
+        1616,
+        528
       ],
-      "id": "b16d8b66-4b0b-4881-87dd-ed608ce062c7",
+      "id": "47c0f9ef-924d-4922-98a8-2219510d1abc",
       "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "chatId": "8409948018",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1840,
+        528
+      ],
+      "id": "40eff174-a279-4673-8bf1-ac23de096994",
+      "name": "Send a text message",
+      "webhookId": "1154f99c-5dd1-4b60-83de-b3b80a0ef47e",
+      "credentials": {
+        "telegramApi": {
+          "id": "3HvoApxW3ichfmLO",
+          "name": "Telegram DabyNewsBot account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -503,7 +498,7 @@
       "main": [
         [
           {
-            "node": "Send a message",
+            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
@@ -515,23 +510,23 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e8d58362-25d6-465f-925a-428432d21fb3",
+  "versionId": "7f8b735f-7662-45dc-8b69-4a72938d0bf6",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "10768c26fcd6821ec7ccac19dbb327d64ae07e9e53579db4c27b55b246eccfc7"
   },
-  "id": "4nRrIxd9BzMpvtVw",
+  "id": "hij9Nl8z9kBtkcmu",
   "tags": [
     {
-      "createdAt": "2025-08-08T09:17:11.994Z",
-      "updatedAt": "2025-08-08T09:17:11.994Z",
-      "id": "QkDxdqYFQvvFVMPg",
+      "createdAt": "2025-08-26T14:24:05.757Z",
+      "updatedAt": "2025-08-26T14:24:05.757Z",
+      "id": "j5EjMRTWEmqiyVYD",
       "name": "gemini"
     },
     {
-      "createdAt": "2025-08-12T04:25:35.742Z",
-      "updatedAt": "2025-08-12T04:25:35.742Z",
-      "id": "AUjWX8INblT0McIX",
+      "createdAt": "2025-08-26T14:24:05.852Z",
+      "updatedAt": "2025-08-26T14:24:05.852Z",
+      "id": "eXREZ62qmoN2h2tD",
       "name": "done"
     }
   ]
